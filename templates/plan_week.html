@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" action="/save-plan">
+    <h2>Plan Your Next Week</h2>
+    
+    <label>Monday</label>
+    <input type="text" name="monday" placeholder="Lower Body" required>
+    
+    <label>Tuesday</label>
+    <input type="text" name="tuesday" placeholder="Rest" required>
+    
+    <label>Wednesday</label>
+    <input type="text" name="wednesday" placeholder="Upper Body" required>
+    
+    <label>Thursday</label>
+    <input type="text" name="thursday" placeholder="Run" required>
+    
+    <label>Friday</label>
+    <input type="text" name="friday" placeholder="Pickleball" required>
+    
+    <label>Saturday</label>
+    <input type="text" name="saturday" placeholder="Rest" required>
+    
+    <label>Sunday</label>
+    <input type="text" name="sunday" placeholder="Core + Whole Body" required>
+    
+    <button type="submit">Save My Week</button>
+</form>
+{% endblock %}
