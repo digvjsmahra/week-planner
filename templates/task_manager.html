@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Task Manager</h1>
+        
+        <!-- Tabs for categories -->
+        <div class="tabs">
+            {% for category in categories %}
+            <button class="tab-button {% if loop.first %}active{% endif %}" 
+                    onclick="showTab('{{ category }}')">
+                {{ category }}
+            </button>
+            {% endfor %}
+            <button class="tab-button add-tab" onclick="showAddCategoryForm()">+ Add Category</button>
+        </div>
+
+        <!-- Add new category form (hidden by default) -->
+        <div id="addCategoryForm" style="display: none; margin: 20px 0;">
+            <form method="POST" action="/add-category" style="display: flex; gap: 10px;">
+                <input type="text" name="category_name" placeholder="New category name" required style="flex: 1;">
+                <button type="submit">Add</button>
+                <button type="button" onclick="hideAddCategoryForm()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Tab content for each category -->
+        {% for category in categories %}
+        <div class="tab-content {% if loop.first %}active{% endif %}" id="{{ category }}">
+            <h2>{{ category }}</h2>
+            
+            <!-- Task table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Date</th>
+                        <th>Day of Week</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks[category] %}
+                    <tr>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.date if task.date else '-' }}</td>
+                        <td>{{ task.day if task.day else 'Backlog' }}</td>
+                        <td>
+                            <form method="POST" action="/delete-task/{{ task.id }}" style="display: inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Add task form -->
+            <div class="add-task-form">
+                <h3>Add New Task</h3>
+                <form method="POST" action="/add-task">
+                    <input type="hidden" name="category" value="{{ category }}">
+                    
+                    <div class="form-row">
+                        <label>Task Name:</label>
+                        <input type="text" name="task_name" placeholder="e.g., Call John, Read book, Lower Body workout" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Specific Date (optional):</label>
+                        <input type="date" name="task_date">
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>Or assign to a day:</label>
+                        <select name="task_day">
+                            <option value="">Backlog (no specific day)</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">Add Task</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Simple tab switching functionality
+        function showTab(categoryName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button:not(.add-tab)');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(categoryName).classList.add('active');
+            
+            // Highlight active button
+            event.target.classList.add('active');
+        }
+
+        function showAddCategoryForm() {
+            document.getElementById('addCategoryForm').style.display = 'block';
+        }
+
+        function hideAddCategoryForm() {
+            document.getElementById('addCategoryForm').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
