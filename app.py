@@ -19,6 +19,8 @@ next_id = 5
 
 @app.route('/')
 def home():
+    # print(categories) # debug to see what data is being sent to the HTML
+    # print(tasks) # debug to see what data is being sent to the HTML
     return render_template('task_manager.html', categories=categories, tasks=tasks)
 
 @app.route('/add-task', methods=['POST'])
